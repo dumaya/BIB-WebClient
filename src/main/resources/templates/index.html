@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+  <head>
+    <meta charset="utf-8" />
+    <title>bibWeb</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link th:href="@{css/bibWeb.css}" rel="stylesheet" />
+  </head>
+  <body>
+  <div class="container container-fluid">
+      <div th:replace="fragments/general.html :: menu"></div>
+
+      <header class="page-header">
+        <h1>bibWeb, partageons nos spots !</h1>
+    </header>
+    <div class="row">
+      <div class="col-lg-12 hidden-xs"><img class="img-thumbnail center-block"  th:src="@{images/climbing720.png}" alt="Escalade d'un rocher en forêt" /></div>
+      <div class="col-lg-12 visible-xs"><img class="img-thumbnail center-block" th:src="@{images/climbing.png}" alt="Escalade d'un rocher en forêt" /></div>
+    </div>
+
+      <div th:replace="fragments/general.html :: pied"></div>
+    </div>
+  </body>
+</html>

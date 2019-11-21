@@ -1,0 +1,39 @@
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <title>bibWeb</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <link th:href="@{/content/bibWeb.css}" href="../static/css/bibWeb.css" rel="stylesheet" />
+  </head>
+  <body>
+  <div th:fragment="menu">
+
+      <nav class="navbar navbar-default navbar-static-top">
+        <ul class="nav navbar-nav">
+          <li> <a th:href="@{/index}">Accueil</a> </li>
+          <li> <a th:href="@{/sites}">Liste des Sites</a> </li>
+          <li> <a th:href="@{/rechercheouvragesite}">Recherche d'ouvrage</a> </li>
+          <li> <a th:href="@{/topos}">Topos</a> </li>
+          <li> <a th:href="@{/mestopos}">Mes topos</a> </li>
+        </ul>
+      </nav>
+
+  </div>
+  <div th:fragment="pied">
+    <footer>
+
+        <!--
+        © 2019 dumaya.dev
+        <div th:if="${utilisateur != null}">
+          Utilisateur connecté: <span th:text="${utilisateur.getEmail()}"></span>
+          | Roles: <div th:each ="role : ${roles}" th:utext="${role.getRole()} + ' '" th:remove="tag"></div>
+          | <a th:href="@{/logout}">Se deconnecter</a>
+        </div>
+        <div th:if="${utilisateur == null}">
+          <a th:href="@{/login}">Se connecter</a>
+        </div>
+        -- this is footer -->
+    </footer>
+  </div>
+  </body>
+</html>
