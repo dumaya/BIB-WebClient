@@ -14,13 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class OuvrageController {
+public class ClientController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OuvrageController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientController.class);
 
     private final ClientService clientService;
 
-    public OuvrageController(ClientService clientService) {
+    public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }
 
@@ -49,7 +49,7 @@ public class OuvrageController {
     @PostMapping(value = "/rechercheouvrage/recherche")
     public String rechercheouvrageRecherche (Model model, @ModelAttribute("ouvrageCherche") OuvrageCherche ouvrageCherche) {
         LOGGER.debug("lancement d'une recherche");
-        List<OuvrageCherche> ouvrages= clientService.getOuvrageCherche();
+        List<OuvrageCherche> ouvrages= clientService.getListeOuvragesFiltree(ouvrageCherche);
         model.addAttribute("ouvrageCherche", ouvrageCherche);
         model.addAttribute("ouvrages", ouvrages);
         return "rechercheouvrage";

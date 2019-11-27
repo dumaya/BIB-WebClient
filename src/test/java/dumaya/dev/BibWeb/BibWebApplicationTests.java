@@ -1,9 +1,9 @@
 package dumaya.dev.BibWeb;
 
-import dumaya.dev.BibWeb.config.OuvrageControllerFeignClientBuilder;
+import dumaya.dev.BibWeb.exceptions.NotFoundException;
 import dumaya.dev.BibWeb.modelAPI.Ouvrage;
-import dumaya.dev.BibWeb.modelAPI.OuvrageRessource;
-import dumaya.dev.BibWeb.service.OuvrageClient;
+import dumaya.dev.BibWeb.proxies.BibAppProxy;
+import dumaya.dev.BibWeb.service.ClientService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,35 +11,36 @@ import org.junit.runners.JUnit4;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-@Slf4j
-@RunWith(JUnit4.class)
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class BibWebApplicationTests {
 
-	private OuvrageClient ouvrageClient;
 	private static Logger log = LoggerFactory.getLogger(BibWebApplicationTests.class);
-
-
-	@Before
-	public void setup() {
-		OuvrageControllerFeignClientBuilder feignClientBuilder = new OuvrageControllerFeignClientBuilder();
-		ouvrageClient = feignClientBuilder.getOuvrageClient();
-	}
-
+	@Autowired
+	private BibAppProxy bibAppProxy;
 	@Test
-	public void givenOuvrageClient_shouldRunSuccessfully() throws Exception {
+	public void listeOuvrageNonVide() throws Exception {
 		log.info("debut test");
-		List<Ouvrage> ouvrages = ouvrageClient.findAll()
-				.stream()
-				.map(OuvrageRessource::getOuvrage)
-				.collect(Collectors.toList());
+		List<Ouvrage> ouvrages = bibAppProxy.listeDesOuvrages();
+		assertNotNull(ouvrages);
 		assertTrue(ouvrages.size() > 0);
-		log.info("taille ouvrage", ouvrages.size());
-		log.info("{}", ouvrages);
+
+	}
+	@Test
+	public void accederUnOuvrageNonTrouvé() throws Exception {
+		log.info("debut test");
+		try {
+			Ouvrage ouvrage = bibAppProxy.recupererUnOuvrage(300);
+		} catch (Exception e) {
+			assertEquals("Non trouvé ",e.getMessage());
+		}
 	}
 }
