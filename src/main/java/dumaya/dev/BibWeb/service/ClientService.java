@@ -1,12 +1,16 @@
 package dumaya.dev.BibWeb.service;
 
+import dumaya.dev.BibWeb.exceptions.APIException;
+import dumaya.dev.BibWeb.exceptions.NotFoundException;
 import dumaya.dev.BibWeb.modelAPI.Ouvrage;
 import dumaya.dev.BibWeb.modelAPI.Pret;
 import dumaya.dev.BibWeb.modelAPI.Reference;
 import dumaya.dev.BibWeb.modelForm.OuvrageCherche;
 import dumaya.dev.BibWeb.proxies.BibAppProxy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,29 +23,64 @@ public class ClientService {
     @Autowired
     private BibAppProxy bibAppProxy;
 
+    private Reference recupererUneReferenceService (int id) {
+        try {
+            Reference reference = bibAppProxy.recupererUneReference(id);
+            return reference;
+        } catch (NotFoundException e) {
+            return null;
+        } catch (RuntimeException e) {
+            throw new APIException("Get Reference par id" ,e.getMessage(),e.getStackTrace().toString());
+        }
+    }
+    private Pret recupererUnPretService (int id) {
+        try {
+            List<Pret>  listePret = bibAppProxy.listeDesPretsPourOuvrage(id);
+            return pret;
+        } catch (NotFoundException e) {
+            return null;
+        } catch (RuntimeException e) {
+            throw new APIException("Get Pret par id" ,e.getMessage(),e.getStackTrace().toString());
+        }
+    }
     private List<OuvrageCherche> getListeOuvrages() {
 
         List<OuvrageCherche> ouvrageChercheListe = new ArrayList<>();
-        List<Ouvrage> ouvrages = bibAppProxy.listeDesOuvrages();
+        try {
+            List<Ouvrage> ouvrages = bibAppProxy.listeDesOuvrages();
 
         for (Ouvrage ouvrage: ouvrages) {
-            Reference reference = bibAppProxy.recupererUneReference(ouvrage.getIdReference());
-            Pret pret = bibAppProxy.recupererUnPret(ouvrage.getId());
+            Reference reference = recupererUneReferenceService(ouvrage.getIdReference());
+            Pret pret = recupererUnPretService(ouvrage.getId());
             OuvrageCherche ouvrageCherche = new OuvrageCherche();
             ouvrageCherche.setId(ouvrage.getId());
             ouvrageCherche.setIdReference(ouvrage.getIdReference());
-            ouvrageCherche.setAuteur(reference.getAuteur());
-            ouvrageCherche.setTitre(reference.getTitre());
-            if (null != pret && pret.getDateFin().after(new Date())){
-                ouvrageCherche.setDispoPret(true);
+            if (reference != null ) {
+                ouvrageCherche.setAuteur(reference.getAuteur());
+                ouvrageCherche.setTitre(reference.getTitre());
             } else {
-                ouvrageCherche.setDispoPret(false);
+                ouvrageCherche.setAuteur("Auteur non trouvé");
+                ouvrageCherche.setTitre("Titre non trouvé");
+            }
+            if (null != pret) {
+                if (pret.getDateFin().after(new Date())) {
+                    ouvrageCherche.setDispoPret(false);
+                } else {
+                    ouvrageCherche.setDispoPret(true);
+                }
+            } else {
+                ouvrageCherche.setDispoPret(true);
             }
             ouvrageCherche.setEmplacement(ouvrage.getEmplacement());
             ouvrageChercheListe.add(ouvrageCherche);
         }
-
         return ouvrageChercheListe;
+
+        } catch (NotFoundException e) {
+            return null;
+        } catch (RuntimeException e) {
+            throw new APIException("Get Ouvrages" ,e.getMessage(),e.getStackTrace().toString());
+        }
     }
 
     public List<OuvrageCherche> getListeOuvragesFiltree(OuvrageCherche ouvrageCherche) {

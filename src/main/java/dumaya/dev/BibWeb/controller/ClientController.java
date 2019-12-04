@@ -9,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,18 +25,23 @@ public class ClientController {
     public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }
+    @RequestMapping("/")
+    public String racine() {
+        return "index";
+    }
+    @RequestMapping("/index")
+    public String index() {
+        return "index";
+    }
 
     @GetMapping("/ajoutouvrage")
     public String ajoutouvrage(Model model) {
-
         /* Formulaire de création d'un ouvrage */
         LOGGER.debug("Init formulaire ouvrage");
         OuvrageCherche ouvrage = new OuvrageCherche();
         model.addAttribute("ouvrage", ouvrage);
-
         return "ajoutouvrage";
     }
-
 
     @GetMapping("/rechercheouvrage")
     public String rechercheouvrage(Model model) {

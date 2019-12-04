@@ -29,4 +29,7 @@ public interface BibAppProxy {
 
     @GetMapping(value = "/prets/{id}")
     Pret recupererUnPret(@PathVariable("id") int id);
+
+    @GetMapping(value = "/prets/ouvrage/{id}")
+    List<Pret> listeDesPretsPourOuvrage(@PathVariable("id") int id);
 }
