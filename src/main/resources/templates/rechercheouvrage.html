@@ -21,10 +21,14 @@
             <label for="titre">Titre</label>
             <input type="text" class="form-control" th:field="*{titre}" id="titre"  />
           </div>
-          <div class="form-group">
-            <label for="dispoPret">Disponible ?</label>
-            <input type="text" class="form-control" th:field="*{dispoPret}" id="dispoPret" />
-          </div>
+           <div class="radio" >
+                <label class="radio">
+                    <input type="radio" th:field="*{dispoPret}" th:value="true" name="options"  id="option1" > Disponible
+                </label>
+                <label class="radio">
+                    <input type="radio" th:field="*{dispoPret}" th:value="false" name="options" id="option2" > Indisponible
+                </label>
+            </div>
           <div class="form-group">
             <label for="auteur">Auteur</label>
             <input type="text" class="form-control" th:field="*{auteur}" id="auteur"/>

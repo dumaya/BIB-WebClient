@@ -35,8 +35,8 @@ public class ClientService {
     }
     private Pret recupererUnPretService (int id) {
         try {
-            List<Pret>  listePret = bibAppProxy.listeDesPretsPourOuvrage(id);
-            return pret;
+            Pret pretEnCours = bibAppProxy.pretEnCours(id);
+            return pretEnCours;
         } catch (NotFoundException e) {
             return null;
         } catch (RuntimeException e) {
