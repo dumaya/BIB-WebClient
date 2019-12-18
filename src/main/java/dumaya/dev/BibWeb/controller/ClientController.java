@@ -1,7 +1,7 @@
 package dumaya.dev.BibWeb.controller;
 
 import dumaya.dev.BibWeb.modelForm.OuvrageCherche;
-import dumaya.dev.BibWeb.service.ClientService;
+import dumaya.dev.BibWeb.service.APIClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +19,9 @@ public class ClientController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientController.class);
 
-    private final ClientService clientService;
+    private final APIClientService clientService;
 
-    public ClientController(ClientService clientService) {
+    public ClientController(APIClientService clientService) {
         this.clientService = clientService;
     }
     @RequestMapping("/")

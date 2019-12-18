@@ -10,6 +10,16 @@ public class Usager {
 
     private String mail;
 
+    public int getIdWeb() {
+        return idWeb;
+    }
+
+    public void setIdWeb(int idWeb) {
+        this.idWeb = idWeb;
+    }
+
+    private int idWeb;
+
     public int getId() {
         return id;
     }

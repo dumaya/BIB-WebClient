@@ -1,14 +1,9 @@
 package dumaya.dev.BibWeb;
 
-import dumaya.dev.BibWeb.exceptions.NotFoundException;
 import dumaya.dev.BibWeb.modelAPI.Ouvrage;
 import dumaya.dev.BibWeb.proxies.BibAppProxy;
-import dumaya.dev.BibWeb.service.ClientService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

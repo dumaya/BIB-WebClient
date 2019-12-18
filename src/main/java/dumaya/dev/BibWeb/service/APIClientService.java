@@ -1,12 +1,17 @@
 package dumaya.dev.BibWeb.service;
 
+import dumaya.dev.BibWeb.controller.ClientController;
 import dumaya.dev.BibWeb.exceptions.APIException;
 import dumaya.dev.BibWeb.exceptions.NotFoundException;
 import dumaya.dev.BibWeb.modelAPI.Ouvrage;
 import dumaya.dev.BibWeb.modelAPI.Pret;
 import dumaya.dev.BibWeb.modelAPI.Reference;
+import dumaya.dev.BibWeb.modelAPI.Usager;
 import dumaya.dev.BibWeb.modelForm.OuvrageCherche;
+import dumaya.dev.BibWeb.modelForm.Utilisateur;
 import dumaya.dev.BibWeb.proxies.BibAppProxy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,11 +23,43 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ClientService {
+public class APIClientService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(APIClientService.class);
 
     @Autowired
     private BibAppProxy bibAppProxy;
 
+    public Usager creerUsager (Utilisateur utilisateur) {
+        try {
+            Usager usagerExistant = recupererUnUsagerService(utilisateur.getId());
+            LOGGER.info("Usager déjà existant");
+            return usagerExistant;
+        } catch (NotFoundException e) {
+            try {
+                Usager usagerACreer = new Usager();
+                usagerACreer.setMail(utilisateur.getEmail());
+                usagerACreer.setNom(utilisateur.getName());
+                usagerACreer.setPrenom(utilisateur.getLastName());
+                usagerACreer.setIdWeb(utilisateur.getId());
+                Usager usagerCree = bibAppProxy.creerUnUsager(usagerACreer);
+                return  usagerCree;
+            } catch (RuntimeException ex) {
+                throw new APIException("Post Usager" ,ex.getMessage(),ex.getStackTrace().toString());
+            }
+        } catch (RuntimeException e) {
+            throw new APIException("Post Usager" ,e.getMessage(),e.getStackTrace().toString());
+        }
+    }
+    private Usager recupererUnUsagerService (int id) {
+        try {
+            Usager usager = bibAppProxy.recupererUnUsager(id);
+            return usager;
+        } catch (NotFoundException e) {
+            return null;
+        } catch (RuntimeException e) {
+            throw new APIException("Get Usager par email" ,e.getMessage(),e.getStackTrace().toString());
+        }
+    }
     private Reference recupererUneReferenceService (int id) {
         try {
             Reference reference = bibAppProxy.recupererUneReference(id);
