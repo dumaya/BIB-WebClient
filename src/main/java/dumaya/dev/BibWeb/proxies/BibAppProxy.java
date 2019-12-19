@@ -39,6 +39,9 @@ public interface BibAppProxy {
     @GetMapping(value = "/prets/{id}")
     Pret recupererUnPret(@PathVariable("id") int id);
 
-    @GetMapping(value = "/prets/ouvrage/{id}")
-    Pret pretEnCours(@PathVariable("id") int id);
+    @GetMapping(value = "/prets/ouvrages/{id}")
+    Pret pretEnCoursOuvrage(@PathVariable("id") int id);
+
+    @GetMapping(value = "/prets/usagers/{id}")
+    List <Pret> pretEnCoursUsager(@PathVariable("id") int id);
 }

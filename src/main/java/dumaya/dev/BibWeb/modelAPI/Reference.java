@@ -27,4 +27,8 @@ public class Reference {
     public String getTitre() {
         return titre;
     }
+
+    public void setTitre(String titre) {
+        this.titre = titre;
+    }
 }

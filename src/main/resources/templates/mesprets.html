@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <title>bibWeb</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <link th:href="@{css/bibWeb.css}" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container">
+        <div th:replace="fragments/general.html :: menu"></div>
+
+        <header class="page-header">
+            <h1>Liste de mes prêts en cours</h1>
+        </header>
+        <section class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <tr>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Date limite de fin de prêt</th>
+                    <th>Prolonger le prêt</th>
+                </tr>
+                <tr th:each ="pret : ${prets}">
+                    <td th:utext="${pret.titre}">...</td>
+                    <td th:utext="${pret.auteur}">...</td>
+                    <td th:utext="${pret.datFinPret}">...</td>
+                    <td>
+                        <span th:if="${pret.topProlongation}">
+                            <form data-toggle="validator" role="form" th:object="${pret}" th:action="@{/mesprets/accepterEmprunt}" method="post">
+                                <input type="hidden"  th:value="${pret.id}" name="id"/>
+                                <button type="submit" class="btn btn-warning">Accepter emprunt</button>
+                            </form>
+                        </span>
+                        <span th:if="!${pret.topProlongation}">
+                            <form data-toggle="validator" role="form" th:object="${pret}" th:action="@{/mesprets/prolonger}" method="post">
+                                <input type="hidden"  th:value="${pret.id}" name="id"/>
+                                <button type="submit" class="btn btn-success">Prolonger l'emprunt</button>
+                            </form>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <div th:replace="fragments/general.html :: pied"></div>
+    </div>
+  </body>
+</html>
+

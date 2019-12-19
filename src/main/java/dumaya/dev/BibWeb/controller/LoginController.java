@@ -53,10 +53,10 @@ public class LoginController {
 		if (bindingResult.hasErrors()) {
 			modelAndView.setViewName("registration");
 		} else {
-			clientService.creerUsager(utilisateur);
 			utilisateurService.saveUtilisateur(utilisateur);
+			clientService.creerUsager(utilisateur);
 			modelAndView.addObject("successMessage", "Utilisateur has been registered successfully");
-			modelAndView.addObject("utilisateur", new Utilisateur());
+			modelAndView.addObject("utilisateur", utilisateur);
 			modelAndView.setViewName("registration");
 		}
 		return modelAndView;
@@ -72,5 +72,4 @@ public class LoginController {
 		modelAndView.setViewName("index");
 		return modelAndView;
 	}
-
 }

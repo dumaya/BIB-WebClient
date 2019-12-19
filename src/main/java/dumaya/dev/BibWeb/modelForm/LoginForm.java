@@ -1,4 +1,4 @@
-package dumaya.dev.BibWeb.controller;
+package dumaya.dev.BibWeb.modelForm;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

@@ -1,6 +1,5 @@
 package dumaya.dev.BibWeb.service;
 
-import dumaya.dev.BibWeb.controller.ClientController;
 import dumaya.dev.BibWeb.exceptions.APIException;
 import dumaya.dev.BibWeb.exceptions.NotFoundException;
 import dumaya.dev.BibWeb.modelAPI.Ouvrage;
@@ -8,19 +7,17 @@ import dumaya.dev.BibWeb.modelAPI.Pret;
 import dumaya.dev.BibWeb.modelAPI.Reference;
 import dumaya.dev.BibWeb.modelAPI.Usager;
 import dumaya.dev.BibWeb.modelForm.OuvrageCherche;
+import dumaya.dev.BibWeb.modelForm.PretEnCoursUsager;
 import dumaya.dev.BibWeb.modelForm.Utilisateur;
 import dumaya.dev.BibWeb.proxies.BibAppProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class APIClientService {
@@ -31,8 +28,8 @@ public class APIClientService {
 
     public Usager creerUsager (Utilisateur utilisateur) {
         try {
-            Usager usagerExistant = recupererUnUsagerService(utilisateur.getId());
-            LOGGER.info("Usager déjà existant");
+            Usager usagerExistant = bibAppProxy.recupererUnUsager(utilisateur.getId());
+            LOGGER.info("Usager déjà existant pour cet id Web");
             return usagerExistant;
         } catch (NotFoundException e) {
             try {
@@ -50,14 +47,24 @@ public class APIClientService {
             throw new APIException("Post Usager" ,e.getMessage(),e.getStackTrace().toString());
         }
     }
-    private Usager recupererUnUsagerService (int id) {
+    public Usager recupererUnUsagerService(int idWeb) {
         try {
-            Usager usager = bibAppProxy.recupererUnUsager(id);
+            Usager usager = bibAppProxy.recupererUnUsager(idWeb);
             return usager;
         } catch (NotFoundException e) {
             return null;
         } catch (RuntimeException e) {
-            throw new APIException("Get Usager par email" ,e.getMessage(),e.getStackTrace().toString());
+            throw new APIException("Get usager par id web" ,e.getMessage(),e.getStackTrace().toString());
+        }
+    }
+    private Ouvrage recupererUnOuvrageService (int id) {
+        try {
+            Ouvrage ouvrage = bibAppProxy.recupererUnOuvrage(id);
+            return ouvrage;
+        } catch (NotFoundException e) {
+            return null;
+        } catch (RuntimeException e) {
+            throw new APIException("Get Ouvrage par id" ,e.getMessage(),e.getStackTrace().toString());
         }
     }
     private Reference recupererUneReferenceService (int id) {
@@ -65,21 +72,31 @@ public class APIClientService {
             Reference reference = bibAppProxy.recupererUneReference(id);
             return reference;
         } catch (NotFoundException e) {
-            return null;
+            Reference referenceNonTrouvée = new Reference();
+            referenceNonTrouvée.setAuteur("Auteur non trouvé");
+            referenceNonTrouvée.setTitre("Titre non trouvé");
+            return referenceNonTrouvée;
         } catch (RuntimeException e) {
             throw new APIException("Get Reference par id" ,e.getMessage(),e.getStackTrace().toString());
         }
     }
+
+    /**
+     * @param id id de l'ouvrage
+     * @return Pret
+     */
     private Pret recupererUnPretService (int id) {
         try {
-            Pret pretEnCours = bibAppProxy.pretEnCours(id);
+            Pret pretEnCours = bibAppProxy.pretEnCoursOuvrage(id);
             return pretEnCours;
         } catch (NotFoundException e) {
             return null;
         } catch (RuntimeException e) {
             throw new APIException("Get Pret par id" ,e.getMessage(),e.getStackTrace().toString());
+            //TODO logs
         }
     }
+
     private List<OuvrageCherche> getListeOuvrages() {
 
         List<OuvrageCherche> ouvrageChercheListe = new ArrayList<>();
@@ -92,13 +109,9 @@ public class APIClientService {
             OuvrageCherche ouvrageCherche = new OuvrageCherche();
             ouvrageCherche.setId(ouvrage.getId());
             ouvrageCherche.setIdReference(ouvrage.getIdReference());
-            if (reference != null ) {
-                ouvrageCherche.setAuteur(reference.getAuteur());
-                ouvrageCherche.setTitre(reference.getTitre());
-            } else {
-                ouvrageCherche.setAuteur("Auteur non trouvé");
-                ouvrageCherche.setTitre("Titre non trouvé");
-            }
+            ouvrageCherche.setAuteur(reference.getAuteur());
+            ouvrageCherche.setTitre(reference.getTitre());
+
             if (null != pret) {
                 if (pret.getDateFin().after(new Date())) {
                     ouvrageCherche.setDispoPret(false);
@@ -157,5 +170,32 @@ public class APIClientService {
         }
 
         return ouvrageChercheListeFiltree;
+    }
+
+    public List<PretEnCoursUsager> getListePretEnCours(int idUsager) {
+        List<PretEnCoursUsager> pretEnCoursListe = new ArrayList<>();
+        try {
+            List<Pret> prets = bibAppProxy.pretEnCoursUsager(idUsager);
+            for (Pret pret: prets) {
+                Ouvrage ouvrage = recupererUnOuvrageService(pret.getIdOuvrage());
+                Reference reference = recupererUneReferenceService(ouvrage.getIdReference());
+                PretEnCoursUsager pretEnCoursUsager = new PretEnCoursUsager();
+                pretEnCoursUsager.setId(pret.getId());
+                pretEnCoursUsager.setIdOuvrage(pret.getIdOuvrage());
+                pretEnCoursUsager.setIdUsager(pret.getIdUsager());
+                pretEnCoursUsager.setAuteur(reference.getAuteur());
+                pretEnCoursUsager.setTitre(reference.getTitre());
+                pretEnCoursUsager.setDateFin(pret.getDateFin());
+                pretEnCoursUsager.setDateRetour(pret.getDateRetour());
+                pretEnCoursUsager.setTopProlongation(pret.getTopProlongation());
+
+                pretEnCoursListe.add(pretEnCoursUsager);
+            }
+            return pretEnCoursListe;
+        } catch (NotFoundException e) {
+            return null;
+        } catch (RuntimeException e) {
+            throw new APIException("Get Liste des prets en cours d'un usager" ,e.getMessage(),e.getStackTrace().toString());
+        }
     }
 }
