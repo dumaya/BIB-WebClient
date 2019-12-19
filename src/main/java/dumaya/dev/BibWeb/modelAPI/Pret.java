@@ -9,6 +9,7 @@ public class Pret {
     private int idOuvrage;
     private int idUsager;
     private Date dateFin;
+    private Date dateRetour;
     private Boolean topProlongation;
 
     public int getId() {
@@ -49,5 +50,13 @@ public class Pret {
 
     public void setTopProlongation(Boolean topProlongation) {
         this.topProlongation = topProlongation;
+    }
+
+    public Date getDateRetour() {
+        return dateRetour;
+    }
+
+    public void setDateRetour(Date dateRetour) {
+        this.dateRetour = dateRetour;
     }
 }

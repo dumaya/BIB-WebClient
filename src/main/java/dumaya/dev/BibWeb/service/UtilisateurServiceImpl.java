@@ -51,6 +51,7 @@ public class UtilisateurServiceImpl implements UtilisateurService, UserDetailsSe
 		roles.add(roleRepository.findByRole("ROLE_ADMIN"));
 		utilisateur.setRoles(roles);
 		utilisateurRepository.save(utilisateur);
+		//TODO passer le repo du login ds l'API
 	}
 	
 	@Transactional

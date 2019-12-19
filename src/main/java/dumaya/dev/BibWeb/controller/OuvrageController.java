@@ -15,13 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class ClientController {
+public class OuvrageController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClientController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OuvrageController.class);
 
     private final APIClientService clientService;
 
-    public ClientController(APIClientService clientService) {
+    public OuvrageController(APIClientService clientService) {
         this.clientService = clientService;
     }
     @RequestMapping("/")
@@ -31,15 +31,6 @@ public class ClientController {
     @RequestMapping("/index")
     public String index() {
         return "index";
-    }
-
-    @GetMapping("/ajoutouvrage")
-    public String ajoutouvrage(Model model) {
-        /* Formulaire de création d'un ouvrage */
-        LOGGER.debug("Init formulaire ouvrage");
-        OuvrageCherche ouvrage = new OuvrageCherche();
-        model.addAttribute("ouvrage", ouvrage);
-        return "ajoutouvrage";
     }
 
     @GetMapping("/rechercheouvrage")
