@@ -18,23 +18,23 @@
         <div class="row">
 			<div class="col-md-6 col-md-offset-3">
 				<form autocomplete="off" action="#" th:action="@{/registration}"
-					th:object="${utilisateur}" method="post" class="form-horizontal"
+					th:object="${usager}" method="post" class="form-horizontal"
 					role="form">
 					<h2>Formulaire de création de compte</h2>
 					<div class="form-group">
 						<div class="col-sm-9">
-						<label th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+						<label th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"
 								class="validation-message"></label>
-						<input type="text" th:field="*{name}" placeholder="Nom"
+						<input type="text" th:field="*{nom}" placeholder="Nom"
 								class="form-control" /> 
 						</div>
 					</div>
 
 					<div class="form-group">
 						<div class="col-sm-9">
-						<label	th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"
+						<label	th:if="${#fields.hasErrors('prenom')}" th:errors="*{prenom}"
 								class="validation-message"></label>
-							<input type="text" th:field="*{lastName}"
+							<input type="text" th:field="*{prenom}"
 								placeholder="Prénom" class="form-control" />
 						</div>
 					</div>

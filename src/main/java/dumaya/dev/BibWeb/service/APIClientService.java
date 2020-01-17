@@ -2,19 +2,16 @@ package dumaya.dev.BibWeb.service;
 
 import dumaya.dev.BibWeb.exceptions.APIException;
 import dumaya.dev.BibWeb.exceptions.NotFoundException;
-import dumaya.dev.BibWeb.modelAPI.Ouvrage;
-import dumaya.dev.BibWeb.modelAPI.Pret;
-import dumaya.dev.BibWeb.modelAPI.Reference;
-import dumaya.dev.BibWeb.modelAPI.Usager;
+import dumaya.dev.BibWeb.modelAPI.*;
 import dumaya.dev.BibWeb.modelForm.OuvrageCherche;
 import dumaya.dev.BibWeb.modelForm.PretEnCoursUsager;
-import dumaya.dev.BibWeb.modelForm.Utilisateur;
 import dumaya.dev.BibWeb.proxies.BibAppProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,18 +23,21 @@ public class APIClientService {
     @Autowired
     private BibAppProxy bibAppProxy;
 
-    public Usager creerUsager (Utilisateur utilisateur) {
+    public Usager creerUsager (@Valid Usager usager) {
         try {
-            Usager usagerExistant = bibAppProxy.recupererUnUsager(utilisateur.getId());
+            Usager usagerExistant = bibAppProxy.recupererUnUsager(usager.getId());
             LOGGER.info("Usager déjà existant pour cet id Web");
             return usagerExistant;
         } catch (NotFoundException e) {
             try {
                 Usager usagerACreer = new Usager();
-                usagerACreer.setMail(utilisateur.getEmail());
-                usagerACreer.setNom(utilisateur.getName());
-                usagerACreer.setPrenom(utilisateur.getLastName());
-                usagerACreer.setIdWeb(utilisateur.getId());
+                usagerACreer.setEmail(usager.getEmail());
+                usagerACreer.setNom(usager.getNom());
+                usagerACreer.setPrenom(usager.getPrenom());
+                usagerACreer.setId(usager.getId());
+                usagerACreer.setPassword(usager.getPassword());
+                usagerACreer.setActive(usager.isActive());
+                usagerACreer.setRoles(usager.getRoles());
                 Usager usagerCree = bibAppProxy.creerUnUsager(usagerACreer);
                 return  usagerCree;
             } catch (RuntimeException ex) {
@@ -47,14 +47,14 @@ public class APIClientService {
             throw new APIException("Post Usager" ,e.getMessage(),e.getStackTrace().toString());
         }
     }
-    public Usager recupererUnUsagerService(int idWeb) {
+    public Usager recupererUnUsagerParEmail(String email) {
         try {
-            Usager usager = bibAppProxy.recupererUnUsager(idWeb);
+            Usager usager = bibAppProxy.recupererUnUsagerParEmail(email);
             return usager;
         } catch (NotFoundException e) {
             return null;
         } catch (RuntimeException e) {
-            throw new APIException("Get usager par id web" ,e.getMessage(),e.getStackTrace().toString());
+            throw new APIException("Get usager par email" ,e.getMessage(),e.getStackTrace().toString());
         }
     }
     private Ouvrage recupererUnOuvrageService (int id) {
@@ -196,6 +196,18 @@ public class APIClientService {
             return null;
         } catch (RuntimeException e) {
             throw new APIException("Get Liste des prets en cours d'un usager" ,e.getMessage(),e.getStackTrace().toString());
+        }
+    }
+
+    public Role recupererUnRoleParRole(String role) {
+        try {
+            Role roleTrouve = bibAppProxy.roleParRole(role);
+            return roleTrouve;
+        } catch (NotFoundException e) {
+            return null;
+        } catch (RuntimeException e) {
+            throw new APIException("Get Role par role" ,e.getMessage(),e.getStackTrace().toString());
+            //TODO logs
         }
     }
 }

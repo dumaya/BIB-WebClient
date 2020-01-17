@@ -24,7 +24,7 @@
                 <tr th:each ="pret : ${prets}">
                     <td th:utext="${pret.titre}">...</td>
                     <td th:utext="${pret.auteur}">...</td>
-                    <td th:utext="${pret.datFinPret}">...</td>
+                    <td th:utext="${pret.dateFin}">...</td>
                     <td>
                         <span th:if="${pret.topProlongation}">
                             <form data-toggle="validator" role="form" th:object="${pret}" th:action="@{/mesprets/accepterEmprunt}" method="post">

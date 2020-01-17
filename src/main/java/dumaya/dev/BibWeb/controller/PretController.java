@@ -2,9 +2,8 @@ package dumaya.dev.BibWeb.controller;
 
 import dumaya.dev.BibWeb.modelAPI.Usager;
 import dumaya.dev.BibWeb.modelForm.PretEnCoursUsager;
-import dumaya.dev.BibWeb.modelForm.Utilisateur;
 import dumaya.dev.BibWeb.service.APIClientService;
-import dumaya.dev.BibWeb.service.UtilisateurService;
+import dumaya.dev.BibWeb.service.UsagerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -20,11 +19,11 @@ import java.util.List;
 public class PretController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PretController.class);
-    private final UtilisateurService utilisateurService;
+    private final UsagerService usagerService;
     private final APIClientService clientService;
 
-    public PretController(UtilisateurService utilisateurService, APIClientService clientService) {
-        this.utilisateurService = utilisateurService;
+    public PretController(UsagerService usagerService, APIClientService clientService) {
+        this.usagerService = usagerService;
         this.clientService = clientService;
     }
 
@@ -33,8 +32,7 @@ public class PretController {
         LOGGER.debug("page consultation de mes prets en cours");
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Utilisateur utilisateur = utilisateurService.findUtilisateurByEmail(auth.getName());
-        Usager usager = clientService.recupererUnUsagerService(utilisateur.getId());
+        Usager usager = usagerService.findUsagerByEmail(auth.getName());
         List<PretEnCoursUsager> prets = clientService.getListePretEnCours(usager.getId());
         model.addAttribute("prets", prets);
         return "mesprets";

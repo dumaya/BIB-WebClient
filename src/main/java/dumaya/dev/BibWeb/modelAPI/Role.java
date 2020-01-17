@@ -1,17 +1,9 @@
-package dumaya.dev.BibWeb.modelForm;
+package dumaya.dev.BibWeb.modelAPI;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "role")
 public class Role {
-	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="role_id")
+
 	private int id;
-	@Column(name="role")
 	private String role;
-	
 	public int getId() {
 		return id;
 	}
@@ -24,6 +16,4 @@ public class Role {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
-	
 }

@@ -1,8 +1,7 @@
 package dumaya.dev.BibWeb.controller;
 
-import dumaya.dev.BibWeb.modelForm.Utilisateur;
-import dumaya.dev.BibWeb.service.APIClientService;
-import dumaya.dev.BibWeb.service.UtilisateurService;
+import dumaya.dev.BibWeb.modelAPI.Usager;
+import dumaya.dev.BibWeb.service.UsagerService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -17,12 +16,10 @@ import javax.validation.Valid;
 @Controller
 public class LoginController {
 	
-	private final UtilisateurService utilisateurService;
-	private final APIClientService clientService;
+	private final UsagerService usagerService;
 
-	public LoginController(UtilisateurService utilisateurService, APIClientService clientService) {
-		this.utilisateurService = utilisateurService;
-		this.clientService = clientService;
+	public LoginController(UsagerService usagerService) {
+		this.usagerService = usagerService;
 	}
 
 	@RequestMapping(value={"/login"}, method = RequestMethod.GET)
@@ -35,28 +32,27 @@ public class LoginController {
 	@RequestMapping(value="/registration", method = RequestMethod.GET)
 	public ModelAndView registration(){
 		ModelAndView modelAndView = new ModelAndView();
-		Utilisateur utilisateur = new Utilisateur();
-		modelAndView.addObject("utilisateur", utilisateur);
+		Usager usager = new Usager();
+		modelAndView.addObject("usager", usager);
 		modelAndView.setViewName("registration");
 		return modelAndView;
 	}
 	
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public ModelAndView creerNouveauUtilisateur(@Valid Utilisateur utilisateur, BindingResult bindingResult) {
+	public ModelAndView creerNouveauUsager(@Valid Usager usager, BindingResult bindingResult) {
 		ModelAndView modelAndView = new ModelAndView();
-		Utilisateur utilisateurExists = utilisateurService.findUtilisateurByEmail(utilisateur.getEmail());
-		if (utilisateurExists != null) {
+		Usager usagerExists = usagerService.findUsagerByEmail(usager.getEmail());
+		if (usagerExists != null) {
 			bindingResult
-					.rejectValue("email", "error.utilisateur",
-							"There is already a utilisateur registered with the email provided");
+					.rejectValue("email", "error.usager",
+							"There is already a usager registered with the email provided");
 		}
 		if (bindingResult.hasErrors()) {
 			modelAndView.setViewName("registration");
 		} else {
-			utilisateurService.saveUtilisateur(utilisateur);
-			clientService.creerUsager(utilisateur);
-			modelAndView.addObject("successMessage", "Utilisateur has been registered successfully");
-			modelAndView.addObject("utilisateur", utilisateur);
+			usagerService.saveUsager(usager);
+			modelAndView.addObject("successMessage", "Usager has been registered successfully");
+			modelAndView.addObject("usager", usager);
 			modelAndView.setViewName("registration");
 		}
 		return modelAndView;
@@ -66,8 +62,8 @@ public class LoginController {
 	public ModelAndView home(){
 		ModelAndView modelAndView = new ModelAndView();
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Utilisateur utilisateur = utilisateurService.findUtilisateurByEmail(auth.getName());
-		modelAndView.addObject("userName", "Welcome " + utilisateur.getName() + " " + utilisateur.getLastName() + " (" + utilisateur.getEmail() + ")");
+		Usager usager = usagerService.findUsagerByEmail(auth.getName());
+		modelAndView.addObject("userName", "Welcome " + usager.getNom() + " " + usager.getPrenom() + " (" + usager.getEmail() + ")");
 		//modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
 		modelAndView.setViewName("index");
 		return modelAndView;

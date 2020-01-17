@@ -1,24 +1,16 @@
 package dumaya.dev.BibWeb.modelAPI;
 
+import java.util.Set;
+
 public class Usager {
 
     private int id;
-
     private String nom;
-
     private String prenom;
-
-    private String mail;
-
-    public int getIdWeb() {
-        return idWeb;
-    }
-
-    public void setIdWeb(int idWeb) {
-        this.idWeb = idWeb;
-    }
-
-    private int idWeb;
+    private String email;
+    private String password;
+    private boolean active;
+    private Set<Role> roles;
 
     public int getId() {
         return id;
@@ -44,11 +36,35 @@ public class Usager {
         this.prenom = prenom;
     }
 
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
