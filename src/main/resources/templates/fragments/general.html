@@ -22,7 +22,6 @@
         © 2019 dumaya.dev
         <div th:if="${usager != null}">
           Utilisateur connecté: <span th:text="${usager.getEmail()}"></span>
-          | Roles: <div th:each ="role : ${roles}" th:utext="${role.getRole()} + ' '" th:remove="tag"></div>
           | <a th:href="@{/logout}">Se deconnecter</a>
         </div>
         <div th:if="${usager == null}">

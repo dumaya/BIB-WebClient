@@ -35,6 +35,7 @@ public class PretController {
         Usager usager = usagerService.findUsagerByEmail(auth.getName());
         List<PretEnCoursUsager> prets = clientService.getListePretEnCours(usager.getId());
         model.addAttribute("prets", prets);
+        model.addAttribute("usager", usager);
         return "mesprets";
     }
 }
