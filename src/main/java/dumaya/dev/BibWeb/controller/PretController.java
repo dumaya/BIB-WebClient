@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -31,6 +32,19 @@ public class PretController {
     public String mesPrets(Model model) {
         LOGGER.debug("page consultation de mes prets en cours");
         ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Usager usager = usagerService.findUsagerByEmail(auth.getName());
+        List<PretEnCoursUsager> prets = clientService.getListePretEnCours(usager.getId());
+        model.addAttribute("prets", prets);
+        model.addAttribute("usager", usager);
+        return "mesprets";
+    }
+
+    @GetMapping("/mesprets/prolonger")
+    public String prolonger(Model model, @ModelAttribute("id") int id) {
+        LOGGER.debug("bouton prolongation de pret");
+        ModelAndView modelAndView = new ModelAndView();
+        clientService.prolongerUnPretService(id);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Usager usager = usagerService.findUsagerByEmail(auth.getName());
         List<PretEnCoursUsager> prets = clientService.getListePretEnCours(usager.getId());

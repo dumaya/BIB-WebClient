@@ -2,10 +2,7 @@ package dumaya.dev.BibWeb.proxies;
 
 import dumaya.dev.BibWeb.modelAPI.*;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -47,4 +44,7 @@ public interface BibAppProxy {
 
     @GetMapping(value = "/roles/role/{role}")
     Role roleParRole(@PathVariable("role") String role);
+
+    @PutMapping(value="/prets/{id}")
+    void prolongerPret(@PathVariable("id") int id);
 }

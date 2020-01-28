@@ -97,6 +97,20 @@ public class APIClientService {
         }
     }
 
+    /**
+     * @param id id de l'ouvrage
+     * @return Pret
+     */
+    public void prolongerUnPretService (int id) {
+        try {
+            bibAppProxy.prolongerPret(id);
+        } catch (NotFoundException e) {
+        } catch (RuntimeException e) {
+            throw new APIException("Put prolongation Pret par id" ,e.getMessage(),e.getStackTrace().toString());
+            //TODO logs
+        }
+    }
+
     private List<OuvrageCherche> getListeOuvrages() {
 
         List<OuvrageCherche> ouvrageChercheListe = new ArrayList<>();

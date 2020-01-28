@@ -27,15 +27,14 @@
                     <td th:utext="${pret.dateFin}">...</td>
                     <td>
                         <span th:if="${pret.topProlongation}">
-                            <form data-toggle="validator" role="form" th:object="${pret}" th:action="@{/mesprets/accepterEmprunt}" method="post">
-                                <input type="hidden"  th:value="${pret.id}" name="id"/>
-                                <button type="submit" class="btn btn-warning">Accepter emprunt</button>
+                            <form data-toggle="validator" role="form"  method="post">
+                                <button type="submit" class="btn btn-warning" disabled>Prolongation impossible</button>
                             </form>
                         </span>
                         <span th:if="!${pret.topProlongation}">
-                            <form data-toggle="validator" role="form" th:object="${pret}" th:action="@{/mesprets/prolonger}" method="post">
+                            <form data-toggle="validator" role="form" th:object="${pret}" th:action="@{/mesprets/prolonger}" method="put">
                                 <input type="hidden"  th:value="${pret.id}" name="id"/>
-                                <button type="submit" class="btn btn-success">Prolonger l'emprunt</button>
+                                <button type="submit" class="btn btn-success">Prolongation de 30 jours</button>
                             </form>
                         </span>
                     </td>
