@@ -176,22 +176,22 @@ public class APIClientService {
         for (OuvrageCherche ouvrage: ouvrageChercheListe) {
             if (null != ouvrageCherche.getAuteur() && !ouvrageCherche.getAuteur().isEmpty()
                 && null != ouvrageCherche.getTitre() && !ouvrageCherche.getTitre().isEmpty() ) {
-                if (ouvrage.getAuteur().contains(ouvrageCherche.getAuteur())
-                && ouvrage.getTitre().contains(ouvrageCherche.getTitre())
+                if (ouvrage.getAuteur().toLowerCase().contains(ouvrageCherche.getAuteur().toLowerCase())
+                && ouvrage.getTitre().toLowerCase().contains(ouvrageCherche.getTitre().toLowerCase())
                 && ouvrage.isDispoPret() == ouvrageCherche.isDispoPret()) {
                     ouvrageChercheListeFiltree.add(ouvrage);
                 }
             }
             if (null != ouvrageCherche.getAuteur() && !ouvrageCherche.getAuteur().isEmpty()
                     && (null == ouvrageCherche.getTitre() || ouvrageCherche.getTitre().isEmpty()) ) {
-                if (ouvrage.getAuteur().contains(ouvrageCherche.getAuteur())
+                if (ouvrage.getAuteur().toLowerCase().contains(ouvrageCherche.getAuteur().toLowerCase())
                         && ouvrage.isDispoPret() == ouvrageCherche.isDispoPret()) {
                     ouvrageChercheListeFiltree.add(ouvrage);
                 }
             }
             if ((null == ouvrageCherche.getAuteur() || ouvrageCherche.getAuteur().isEmpty())
                     && null != ouvrageCherche.getTitre() && !ouvrageCherche.getTitre().isEmpty() ) {
-                if (ouvrage.getTitre().contains(ouvrageCherche.getTitre())
+                if (ouvrage.getTitre().toLowerCase().contains(ouvrageCherche.getTitre().toLowerCase())
                         && ouvrage.isDispoPret() == ouvrageCherche.isDispoPret()) {
                     ouvrageChercheListeFiltree.add(ouvrage);
                 }
