@@ -36,6 +36,7 @@ public class OuvrageController {
     }
     @RequestMapping("/index")
     public String index(Model model) {
+        LOGGER.debug("index");
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Usager usager = usagerService.findUsagerByEmail(auth.getName());

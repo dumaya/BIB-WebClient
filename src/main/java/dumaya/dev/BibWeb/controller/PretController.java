@@ -43,7 +43,6 @@ public class PretController {
     @GetMapping("/mesprets/prolonger")
     public String prolonger(Model model, @ModelAttribute("id") int id) {
         LOGGER.debug("bouton prolongation de pret");
-        ModelAndView modelAndView = new ModelAndView();
         clientService.prolongerUnPretService(id);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Usager usager = usagerService.findUsagerByEmail(auth.getName());

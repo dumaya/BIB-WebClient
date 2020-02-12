@@ -1,13 +1,11 @@
 package dumaya.dev.BibWeb.modelForm;
 
-import java.util.Date;
-
 public class PretEnCoursUsager {
     private int id;
     private int idOuvrage;
     private int idUsager;
-    private Date dateFin;
-    private Date dateRetour;
+    private String dateFin;
+    private String dateRetour;
     private Boolean topProlongation;
     private String titre;
     private String auteur;
@@ -36,22 +34,6 @@ public class PretEnCoursUsager {
         this.idUsager = idUsager;
     }
 
-    public Date getDateFin() {
-        return dateFin;
-    }
-
-    public void setDateFin(Date dateFin) {
-        this.dateFin = dateFin;
-    }
-
-    public Date getDateRetour() {
-        return dateRetour;
-    }
-
-    public void setDateRetour(Date dateRetour) {
-        this.dateRetour = dateRetour;
-    }
-
     public Boolean getTopProlongation() {
         return topProlongation;
     }
@@ -74,5 +56,21 @@ public class PretEnCoursUsager {
 
     public void setAuteur(String auteur) {
         this.auteur = auteur;
+    }
+
+    public String getDateFin() {
+        return dateFin;
+    }
+
+    public void setDateFin(String dateFin) {
+        this.dateFin = dateFin;
+    }
+
+    public String getDateRetour() {
+        return dateRetour;
+    }
+
+    public void setDateRetour(String dateRetour) {
+        this.dateRetour = dateRetour;
     }
 }

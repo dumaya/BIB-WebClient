@@ -2,6 +2,8 @@ package dumaya.dev.BibWeb.service;
 
 import dumaya.dev.BibWeb.modelAPI.Role;
 import dumaya.dev.BibWeb.modelAPI.Usager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,6 +25,7 @@ public class UsagerServiceImpl implements UsagerService, UserDetailsService {
 
 	private final APIClientService clientService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private static final Logger LOGGER = LoggerFactory.getLogger(UsagerServiceImpl.class);
 
 	@Autowired
 	public UsagerServiceImpl(@Lazy BCryptPasswordEncoder bCryptPasswordEncoder, APIClientService clientService) {
@@ -39,6 +42,7 @@ public class UsagerServiceImpl implements UsagerService, UserDetailsService {
 	 * @param usager
 	 */
 	public void saveUsager(Usager usager) {
+		LOGGER.debug("maj usager");
 		usager.setPassword(bCryptPasswordEncoder.encode(usager.getPassword()));
 		usager.setActive(true);
 		HashSet<Role> roles = new HashSet<Role>();

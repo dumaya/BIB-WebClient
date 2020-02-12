@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,8 +24,14 @@ public class APIClientService {
     @Autowired
     private BibAppProxy bibAppProxy;
 
+    /**
+     * @param usager
+     * @return usager créé
+     */
     public Usager creerUsager (@Valid Usager usager) {
+        LOGGER.debug("creer usager");
         try {
+            LOGGER.debug("Appel API usager");
             Usager usagerExistant = bibAppProxy.recupererUnUsager(usager.getId());
             LOGGER.info("Usager déjà existant pour cet id Web");
             return usagerExistant;
@@ -47,8 +54,14 @@ public class APIClientService {
             throw new APIException("Post Usager" ,e.getMessage(),e.getStackTrace().toString());
         }
     }
+
+    /**
+     * @param email
+     * @return usager trouvé
+     */
     public Usager recupererUnUsagerParEmail(String email) {
         try {
+            LOGGER.debug("Appel API usager par mail");
             Usager usager = bibAppProxy.recupererUnUsagerParEmail(email);
             return usager;
         } catch (NotFoundException e) {
@@ -59,6 +72,7 @@ public class APIClientService {
     }
     private Ouvrage recupererUnOuvrageService (int id) {
         try {
+            LOGGER.debug("Appel API ouvrage");
             Ouvrage ouvrage = bibAppProxy.recupererUnOuvrage(id);
             return ouvrage;
         } catch (NotFoundException e) {
@@ -69,6 +83,7 @@ public class APIClientService {
     }
     private Reference recupererUneReferenceService (int id) {
         try {
+            LOGGER.debug("Appel API reference");
             Reference reference = bibAppProxy.recupererUneReference(id);
             return reference;
         } catch (NotFoundException e) {
@@ -87,27 +102,27 @@ public class APIClientService {
      */
     private Pret recupererUnPretService (int id) {
         try {
+            LOGGER.debug("Appel API pret  ouvrage");
             Pret pretEnCours = bibAppProxy.pretEnCoursOuvrage(id);
             return pretEnCours;
         } catch (NotFoundException e) {
             return null;
         } catch (RuntimeException e) {
             throw new APIException("Get Pret par id" ,e.getMessage(),e.getStackTrace().toString());
-            //TODO logs
         }
     }
 
     /**
-     * @param id id de l'ouvrage
-     * @return Pret
+     * @param id id du pret
      */
     public void prolongerUnPretService (int id) {
         try {
+            LOGGER.debug("Appel API prolonger");
             bibAppProxy.prolongerPret(id);
         } catch (NotFoundException e) {
+            LOGGER.warn("Prolongation sur pret non trouvé");
         } catch (RuntimeException e) {
             throw new APIException("Put prolongation Pret par id" ,e.getMessage(),e.getStackTrace().toString());
-            //TODO logs
         }
     }
 
@@ -115,6 +130,7 @@ public class APIClientService {
 
         List<OuvrageCherche> ouvrageChercheListe = new ArrayList<>();
         try {
+            LOGGER.debug("Appel API usager");
             List<Ouvrage> ouvrages = bibAppProxy.listeDesOuvrages();
 
         for (Ouvrage ouvrage: ouvrages) {
@@ -147,7 +163,12 @@ public class APIClientService {
         }
     }
 
+    /**
+     * @param ouvrageCherche
+     * @return liste des ouvrages (au format formulaire) filtrée
+     */
     public List<OuvrageCherche> getListeOuvragesFiltree(OuvrageCherche ouvrageCherche) {
+        LOGGER.debug("liste ouvrage filtree");
 
         List<OuvrageCherche> ouvrageChercheListe = getListeOuvrages();
         List<OuvrageCherche> ouvrageChercheListeFiltree = new ArrayList<>();
@@ -186,9 +207,15 @@ public class APIClientService {
         return ouvrageChercheListeFiltree;
     }
 
+    /**
+     * @param idUsager
+     * @return tous les prets en cours de cet usager
+     */
     public List<PretEnCoursUsager> getListePretEnCours(int idUsager) {
+        LOGGER.debug("liste pret en cours");
         List<PretEnCoursUsager> pretEnCoursListe = new ArrayList<>();
         try {
+            LOGGER.debug("Appel API pret en cours");
             List<Pret> prets = bibAppProxy.pretEnCoursUsager(idUsager);
             for (Pret pret: prets) {
                 Ouvrage ouvrage = recupererUnOuvrageService(pret.getIdOuvrage());
@@ -199,8 +226,13 @@ public class APIClientService {
                 pretEnCoursUsager.setIdUsager(pret.getIdUsager());
                 pretEnCoursUsager.setAuteur(reference.getAuteur());
                 pretEnCoursUsager.setTitre(reference.getTitre());
-                pretEnCoursUsager.setDateFin(pret.getDateFin());
-                pretEnCoursUsager.setDateRetour(pret.getDateRetour());
+                SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy 'à' hh:mm:ss");
+                if (null != pret.getDateFin()) {
+                    pretEnCoursUsager.setDateFin(formater.format(pret.getDateFin()));
+                }
+                if (null != pret.getDateRetour()) {
+                    pretEnCoursUsager.setDateRetour(formater.format(pret.getDateRetour()));
+                }
                 pretEnCoursUsager.setTopProlongation(pret.getTopProlongation());
 
                 pretEnCoursListe.add(pretEnCoursUsager);
@@ -213,15 +245,19 @@ public class APIClientService {
         }
     }
 
+    /**
+     * @param role
+     * @return role correspondant au code role voulu
+     */
     public Role recupererUnRoleParRole(String role) {
         try {
+            LOGGER.debug("Appel API role");
             Role roleTrouve = bibAppProxy.roleParRole(role);
             return roleTrouve;
         } catch (NotFoundException e) {
             return null;
         } catch (RuntimeException e) {
             throw new APIException("Get Role par role" ,e.getMessage(),e.getStackTrace().toString());
-            //TODO logs
         }
     }
 }

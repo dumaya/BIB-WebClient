@@ -1,6 +1,8 @@
 package dumaya.dev.BibWeb;
 
+import dumaya.dev.BibWeb.exceptions.APIException;
 import dumaya.dev.BibWeb.modelAPI.Ouvrage;
+import dumaya.dev.BibWeb.modelAPI.Pret;
 import dumaya.dev.BibWeb.proxies.BibAppProxy;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,12 +32,23 @@ public class BibWebApplicationTests {
 
 	}
 	@Test
+	public void listePretsParUser() throws Exception {
+		log.info("debut test listePretsParUser");
+		try {
+		List<Pret> prets = bibAppProxy.pretEnCoursUsager(300);
+
+		assertTrue(prets.size() > 0);
+		} catch (RuntimeException e) {
+			throw new APIException("Get Liste des prets en cours d'un usager" ,e.getMessage(),e.getStackTrace().toString());
+		}
+	}
+	@Test
 	public void accederUnOuvrageNonTrouvé() throws Exception {
 		log.info("debut test");
-		try {
+		//try {
 			Ouvrage ouvrage = bibAppProxy.recupererUnOuvrage(300);
-		} catch (Exception e) {
-			assertEquals("Non trouvé ",e.getMessage());
-		}
+		//} catch (Exception e) {
+		//	assertEquals("Non trouvé ",e.getMessage());
+		//}
 	}
 }

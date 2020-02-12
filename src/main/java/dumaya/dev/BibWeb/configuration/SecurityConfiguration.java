@@ -39,7 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/registration").permitAll()
 				.antMatchers("/index").permitAll()
 				.antMatchers("/h2-console/**").permitAll()
-				.antMatchers("/secteurs/modifAmi","/secteurs/supprCommentaire","/secteurs/modifCommentaire").hasAuthority("ROLE_AMI_ESCALADE").anyRequest()
+				.anyRequest()
 				.authenticated().and().csrf().disable().formLogin()
 				.loginPage("/login").failureUrl("/login?error=true")
 				.defaultSuccessUrl("/")

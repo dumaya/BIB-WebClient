@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Accès à l'API (avec Feign)
+ */
 @FeignClient(name = "BibApp", url = "localhost:8001")
 public interface BibAppProxy {
 
@@ -45,6 +48,6 @@ public interface BibAppProxy {
     @GetMapping(value = "/roles/role/{role}")
     Role roleParRole(@PathVariable("role") String role);
 
-    @PutMapping(value="/prets/{id}")
+    @PutMapping(value="/prets/prolongation/{id}")
     void prolongerPret(@PathVariable("id") int id);
 }
